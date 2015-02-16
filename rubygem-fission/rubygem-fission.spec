@@ -1,21 +1,19 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 %{!?scl:%global pkg_name %{name}}
 
-%global gem_name fog-brightbox
+%global gem_name fission
 
-Summary: Module for the 'fog' gem to support Brightbox Cloud
+Summary: A simple utility to manage VMware Fusion VMs from the command line
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 0.4.1
+Version: 0.5.0
 Release: 1%{dist}
 Group: Development/Ruby
 License: MIT
 URL: http://github.com/fog/fog
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 Requires: %{?scl_prefix}rubygems
-Requires: %{?scl_prefix}rubygem-fog-core
-Requires: %{?scl_prefix}rubygem-fog-json
-Requires: %{?scl_prefix}rubygem-inflecto
+Requires: %{?scl_prefix}rubygem(CFPropertyList)
 %if 0%{?fedora} > 18
 Requires: %{?scl_prefix}ruby(release)
 %else
@@ -29,8 +27,7 @@ Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 %define gembuilddir %{buildroot}%{gem_dir}
 
 %description
-This library can be used as a module for `fog` or as standalone provider
-to use the Brightbox Cloud in applications.
+A simple utility to manage VMware Fusion VMs from the command line
 
 # Disabled as docs were added post-0.0.1
 %package doc
@@ -55,21 +52,26 @@ gem install --local --install-dir %{gembuilddir} --force %{SOURCE0} --no-rdoc --
 %files
 %dir %{gem_instdir}
 %{gem_instdir}/lib
+%{gem_instdir}/bin
+%{gem_dir}/bin
 %exclude %{gem_cache}
 %{gem_spec}
-#%{gem_instdir}/LICENSE.txt
+#%{gem_instdir}/config
 %exclude %{gem_instdir}/.*
 
 %files doc
-%{gem_instdir}/LICENSE.txt
+%{gem_instdir}/LICENSE
+#%{gem_instdir}/TODO
 %{gem_instdir}/README.md
+%{gem_instdir}/CHANGELOG.md
+#%{gem_instdir}/Guardfile
 #%{gem_instdir}/test
 %{gem_instdir}/Gemfile*
 %{gem_instdir}/Rakefile
-%doc %{gem_instdir}/CHANGELOG.md
+#%doc %{gem_instdir}/CHANGELOG.md
 %{gem_instdir}/spec
-%{gem_instdir}/gemfiles
-%exclude %{gem_instdir}/fog-brightbox.gemspec
+#%{gem_instdir}/gemfiles
+%exclude %{gem_instdir}/fission.gemspec
 
 %changelog
 * Tue Mar 25 2014 Dominic Cleal <dcleal@redhat.com> 0.0.1-1

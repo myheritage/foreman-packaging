@@ -6,21 +6,31 @@
 Summary: brings clouds to you
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 1.24.0
+Version: 1.27.0
 Release: 1%{dist}
 Group: Development/Ruby
 License: MIT
 URL: http://github.com/fog/fog
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 Requires: %{?scl_prefix}rubygems
-Requires: %{?scl_prefix}rubygem(fog-brightbox)
-Requires: %{?scl_prefix}rubygem(fog-core) >= 1.23.0
+Requires: %{?scl_prefix}rubygem(fog-brightbox) >= 0.4
+Requires: %{?scl_prefix}rubygem(fog-core) >= 1.27.3
 Requires: %{?scl_prefix}rubygem(fog-core) < 2.0.0
-Requires: %{?scl_prefix}rubygem(fog-json)
 Requires: %{?scl_prefix}rubygem(fog-radosgw) >= 0.0.2
 Requires: %{?scl_prefix}rubygem(fog-sakuracloud) >= 0.0.4
+Requires: %{?scl_prefix}rubygem(fog-atmos)
+Requires: %{?scl_prefix}rubygem(fog-aws)
+Requires: %{?scl_prefix}rubygem(fog-ecloud)
+Requires: %{?scl_prefix}rubygem(fog-json)
+Requires: %{?scl_prefix}rubygem(fog-profitbricks)
+Requires: %{?scl_prefix}rubygem(fog-serverlove)
 Requires: %{?scl_prefix}rubygem(fog-softlayer)
-Requires: %{?scl_prefix}rubygem(ipaddress) >= 0.4
+Requires: %{?scl_prefix}rubygem(fog-storm_on_demand)
+Requires: %{?scl_prefix}rubygem(fog-terremark)
+Requires: %{?scl_prefix}rubygem(fog-vmfusion)
+Requires: %{?scl_prefix}rubygem(fog-voxel)
+Requires: %{?scl_prefix}rubygem(fog-xml) >= 0.1.1
+Requires: %{?scl_prefix}rubygem(ipaddress) >= 0.5
 Requires: %{?scl_prefix}rubygem(ipaddress) < 1.0
 Requires: %{?scl_prefix}rubygem(nokogiri) >= 1.5.11
 Requires: %{?scl_prefix}rubygem(nokogiri) < 1.6.0

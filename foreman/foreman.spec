@@ -19,14 +19,14 @@
 #global dashalphatag -%{alphatag}
 
 Name:   foreman
-Version: 1.7.2
+Version: 1.7.2.1
 Release: 1%{?dotalphatag}%{?dist}
 Summary:Systems Management web application
 
 Group:  Applications/System
 License: GPLv3+ with exceptions
 URL: http://theforeman.org
-Source0: http://downloads.theforeman.org/%{name}/%{name}-%{version}%{?dashalphatag}.tar.bz2
+Source0: https://github.com/myheritage/%{name}/archive/%{version}%{?dashalphatag}.tar.gz#/%{name}-%{version}%{?dashalphatag}.tar.gz
 Source1: %{name}.init
 Source2: %{name}.sysconfig
 Source3: %{name}.logrotate
@@ -214,10 +214,21 @@ Meta Package to install requirements for ovirt support
 %package compute
 Summary: Foreman Compute Resource support via fog
 Group:  Applications/System
-Requires: %{?scl_prefix}rubygem-fog >= 1.24.0
-Requires: %{?scl_prefix}rubygem-fog < 1.25.0
-Requires: %{?scl_prefix}rubygem-fog-core >= 1.24.0
-Requires: %{?scl_prefix}rubygem-fog-core < 1.25.0
+Requires: %{?scl_prefix}rubygem-fog >= 1.27.0
+Requires: %{?scl_prefix}rubygem-fog <= 1.27.4
+Requires: %{?scl_prefix}rubygem-fog-aws
+Requires: %{?scl_prefix}rubygem-fog-brightbox
+Requires: %{?scl_prefix}rubygem-fog-profitbricks
+Requires: %{?scl_prefix}rubygem-fog-voxel
+Requires: %{?scl_prefix}rubygem-fog-vmfusion
+Requires: %{?scl_prefix}rubygem-fission
+Requires: %{?scl_prefix}rubygem-fog-terremark
+Requires: %{?scl_prefix}rubygem-fog-ecloud
+Requires: %{?scl_prefix}rubygem-fog-storm_on_demand
+Requires: %{?scl_prefix}rubygem-fog-atmos
+Requires: %{?scl_prefix}rubygem-fog-serverlove
+Requires: %{?scl_prefix}rubygem-fog-core >= 1.27.0
+Requires: %{?scl_prefix}rubygem-fog-core <= 1.27.4
 Requires: %{?scl_prefix}rubygem-unf
 Requires: %{name} = %{version}-%{release}
 Obsoletes: foreman-fog < 1.0.0
