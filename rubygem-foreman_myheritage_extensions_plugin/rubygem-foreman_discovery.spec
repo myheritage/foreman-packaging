@@ -34,11 +34,6 @@ URL:        http://github.com/myheritage/foreman_myheritage_extensions_plugin
 Source0:    http://rubygems.org/downloads/%{gem_name}-%{version}%{?prever}.gem
 
 Requires:   foreman >= 1.6.0
-Requires:   %{?scl_prefix}rubygem(open4)
-Requires:   %{?scl_prefix}rubygem(ftools)
-Requires:   advancecomp
-Requires:   squashfs-tools
-Requires:   sudo
 
 %if 0%{?fedora} > 18
 Requires: %{?scl_prefix}ruby(release)
