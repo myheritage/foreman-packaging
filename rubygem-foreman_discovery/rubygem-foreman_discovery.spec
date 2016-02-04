@@ -12,7 +12,7 @@
 %global gem_name foreman_discovery
 
 %global mainver 4.0.0.1
-%global release 1
+%global release %{?_release:1}
 %{?prever:
 %global gem_instdir %{gem_dir}/gems/%{gem_name}-%{mainver}%{?prever}
 %global gem_docdir %{gem_dir}/doc/%{gem_name}-%{mainver}%{?prever}
@@ -26,7 +26,7 @@
 
 Summary:    MaaS Discovery Plugin for Foreman
 Name:       %{?scl_prefix}rubygem-%{gem_name}
-Version:    %{mainver}
+Version:    %{?gem_version:%{mainver}}
 Release:    %{?prever:0.}%{release}%{?prever}%{?dist}
 Group:      Applications/System
 License:    GPLv3
