@@ -12,7 +12,6 @@
 %global gem_name foreman_discovery
 
 %global mainver 4.0.0.1
-#%global prever .rc4
 %global release 1
 %{?prever:
 %global gem_instdir %{gem_dir}/gems/%{gem_name}-%{mainver}%{?prever}
