@@ -12,7 +12,7 @@
 %global gem_name foreman_discovery
 
 %global mainver 4.0.0.1
-%global release %{?_release:1}
+%define %{?_release:1}
 %{?prever:
 %global gem_instdir %{gem_dir}/gems/%{gem_name}-%{mainver}%{?prever}
 %global gem_docdir %{gem_dir}/doc/%{gem_name}-%{mainver}%{?prever}
@@ -27,18 +27,14 @@
 Summary:    MaaS Discovery Plugin for Foreman
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    %{?gem_version:%{mainver}}
-Release:    %{?prever:0.}%{release}%{?prever}%{?dist}
+Release:    %{?prever:0.}%{release}%{?prever}%{?foremandist}%{?dist}
 Group:      Applications/System
 License:    GPLv3
 URL:        http://github.com/theforeman/foreman_discovery
 Source0:    http://rubygems.org/downloads/%{gem_name}-%{version}%{?prever}.gem
 
-Requires:   foreman >= 1.6.0
-Requires:   %{?scl_prefix}rubygem(open4)
-Requires:   %{?scl_prefix}rubygem(ftools)
-Requires:   advancecomp
-Requires:   squashfs-tools
-Requires:   sudo
+Requires:   foreman >= 1.9.0
+Requires:   %{?scl_prefix}rubygem(deface) < 2.0
 
 %if 0%{?fedora} > 18
 Requires: %{?scl_prefix}ruby(release)
@@ -52,6 +48,8 @@ BuildRequires: %{?scl_prefix}ruby(release)
 %else
 BuildRequires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
 %endif
+BuildRequires: foreman-plugin >= 1.8.0
+BuildRequires: %{?scl_prefix}rubygem(deface) < 1.0
 BuildRequires: %{?scl_prefix}rubygems-devel
 BuildRequires: %{?scl_prefix}rubygems
 
@@ -86,34 +84,23 @@ mkdir -p %{buildroot}%{gem_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
-mkdir -p %{buildroot}%{foreman_bundlerd_dir}
-cat <<GEMFILE > %{buildroot}%{foreman_bundlerd_dir}/%{gem_name}.rb
-gem '%{gem_name}'
-GEMFILE
-
-mkdir -p %{buildroot}/etc/sudoers.d
-cat <<SUDOERS > %{buildroot}/etc/sudoers.d/%{gem_name}
-# Required to run the discovery:build_image rake task as 'foreman'
-foreman ALL = NOPASSWD : %{gem_instdir}/extra/build_iso.sh *, /bin/true
-Defaults:foreman !requiretty
-SUDOERS
-
-# Output directory of the imgae build task
-mkdir -p %{buildroot}/%{foreman_dir}/discovery_image
+%foreman_bundlerd_file
+%foreman_precompile_plugin -a
 
 %files
 %dir %{gem_instdir}
 %{gem_instdir}/app
 %{gem_instdir}/lib
 %{gem_instdir}/config
-%{gem_instdir}/extra
+%{gem_instdir}/db
+%exclude %{gem_instdir}/extra
 %{gem_instdir}/locale
+%{gem_instdir}/public
 %exclude %{gem_cache}
 %{gem_spec}
 %{foreman_bundlerd_dir}/%{gem_name}.rb
-%attr(0755,foreman,foreman) %{foreman_dir}/discovery_image
-%config %attr(0440,root,root) /etc/sudoers.d/%{gem_name}
 %doc %{gem_instdir}/LICENSE
+%foreman_apipie_cache_foreman
 
 %exclude %{gem_instdir}/test
 %exclude %{gem_dir}/cache/%{gem_name}-%{version}%{?prever}.gem
@@ -121,9 +108,44 @@ mkdir -p %{buildroot}/%{foreman_dir}/discovery_image
 %files doc
 %doc %{gem_instdir}/LICENSE
 %doc %{gem_instdir}/README.md
-%{gem_instdir}/Rakefile
+
+%posttrans
+# We need to run the db:migrate after the install transaction
+/usr/sbin/foreman-rake db:migrate  >/dev/null 2>&1 || :
+/usr/sbin/foreman-rake db:seed  >/dev/null 2>&1 || :
+%{foreman_apipie_cache}
+(/sbin/service foreman status && /sbin/service foreman restart) >/dev/null 2>&1
+exit 0
 
 %changelog
+* Thu Aug 13 2015 Dominic Cleal <dcleal@redhat.com> 4.0.0-1
+- Updated foreman_discovery to 4.0.0 (lzap+git@redhat.com)
+- Better branched builds with Foreman version macro (dcleal@redhat.com)
+
+* Tue Mar 10 2015 Dominic Cleal <dcleal@redhat.com> 3.0.0-1
+- Version 3.0.0 for Foreman 1.8 (lzap+git@redhat.com)
+- Refs #4478 - prebuild apipie cache for rubygem-foreman_discovery
+  (martin.bacovsky@gmail.com)
+
+* Mon Feb 09 2015 Dominic Cleal <dcleal@redhat.com> 2.0.0-1
+- Version bump to discovery 2.0.0 (lzap+git@redhat.com)
+
+* Sun Feb 01 2015 Dominic Cleal <dcleal@redhat.com> 2.0.0-0.1.rc2
+- Update foreman_discovery to 2.0.0.rc2 (lzap+git@redhat.com)
+
+* Tue Jan 20 2015 Lukas Zapletal <lzap+rpm@redhat.com> - 2.0.0-0.1.rc1
+- Dropped extra/ directory and TCL building dependencies
+- Update to foreman_discovery 2.0.0.rc1
+
+* Tue Nov 25 2014 Lukas Zapletal <lzap+rpm@redhat.com> - 1.4.1-1
+- Update to foreman_discovery 1.4.1
+
+* Thu Oct 30 2014 Lukas Zapletal <lzap+git@redhat.com> 1.4.0-2
+- Update to foreman_discovery 1.4.0-2
+
+* Thu Oct 30 2014 Lukas Zapletal <lzap+git@redhat.com> 1.4.0-1
+- Updated foreman_discovery to 1.4.0 (lzap+git@redhat.com)
+
 * Wed Oct 01 2014 Lukas Zapletal <lzap+git@redhat.com> 1.4.0-0.1.rc4
 - Update rubygem-foreman_discovery to 1.4.0.rc4 (lzap+git@redhat.com)
 
